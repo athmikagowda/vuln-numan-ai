@@ -1,13 +1,16 @@
 import os
 from groq import Groq
-from dotenv import load_dotenv
 from prompts import SYSTEM_PROMPT
 
-load_dotenv()
+try:
+    import streamlit as st
+    api_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
+except:
+    api_key = os.getenv("GROQ_API_KEY")
 
 def analyze_vulnerability(cleaned_data: str) -> str:
     try:
-        client = Groq(api_key=os.getenv('GROQ_API_KEY'))
+        client = Groq(api_key=api_key)
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
